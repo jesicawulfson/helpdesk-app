@@ -6,12 +6,43 @@ import { Ticket } from '../../../../shared/models/ticket.model';
 import { debounceTime, switchMap } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { DatePipe } from '@angular/common';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSortModule } from '@angular/material/sort';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatCard } from '@angular/material/card';
 
 @Component({
   selector: 'app-tickets-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, ReactiveFormsModule, DatePipe],
-  templateUrl: './tickets-list.component.html'
+  imports: [
+    CommonModule,
+    RouterModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatButtonModule,
+    MatIconModule,
+    MatSortModule,
+    MatTooltipModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatProgressSpinnerModule,
+    MatCard
+  ],
+  templateUrl: './tickets-list.component.html',
+  styleUrls: ['./tickets-list.component.scss']
 })
 export class TicketsListComponent implements OnInit {
 

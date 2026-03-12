@@ -1,50 +1,58 @@
-<h1>{{ isEdit ? 'Editar Ticket' : 'Crear Ticket' }}</h1>
+<mat-card>
+  <mat-card-title>
+    {{ isEdit ? 'Editar Ticket' : 'Crear Ticket' }}
+  </mat-card-title>
 
-<form [formGroup]="form" (ngSubmit)="save()">
+  <form [formGroup]="form" (ngSubmit)="save()" class="ticket-form">
+    <mat-form-field appearance="fill">
+      <mat-label>Título</mat-label>
+      <input matInput formControlName="title" />
+      <mat-error *ngIf="form.get('title')?.invalid && form.get('title')?.touched">
+        El título es obligatorio y mínimo 5 caracteres
+      </mat-error>
+    </mat-form-field>
 
-  <label>
-    Título:
-    <input formControlName="title" />
-  </label>
-  <div *ngIf="form.get('title')?.invalid && form.get('title')?.touched">
-    El título es obligatorio y mínimo 5 caracteres
-  </div>
+    <mat-form-field appearance="fill">
+      <mat-label>Descripción</mat-label>
+      <textarea matInput rows="4" formControlName="description"></textarea>
+      <mat-error *ngIf="form.get('description')?.invalid && form.get('description')?.touched">
+        La descripción es obligatoria y mínimo 20 caracteres
+      </mat-error>
+    </mat-form-field>
 
-  <label>
-    Descripción:
-    <textarea formControlName="description"></textarea>
-  </label>
-  <div *ngIf="form.get('description')?.invalid && form.get('description')?.touched">
-    La descripción es obligatoria y mínimo 20 caracteres
-  </div>
+    <mat-form-field appearance="fill">
+      <mat-label>Categoría</mat-label>
+      <mat-select formControlName="category">
+        <mat-option *ngFor="let c of categories" [value]="c">{{ c }}</mat-option>
+      </mat-select>
+    </mat-form-field>
 
-  <label>
-    Categoría:
-    <select formControlName="category">
-      <option *ngFor="let c of categories" [value]="c">{{ c }}</option>
-    </select>
-  </label>
+    <mat-form-field appearance="fill">
+      <mat-label>Prioridad</mat-label>
+      <mat-select formControlName="priority">
+        <mat-option *ngFor="let p of priorities" [value]="p">{{ p }}</mat-option>
+      </mat-select>
+    </mat-form-field>
 
-  <label>
-    Prioridad:
-    <select formControlName="priority">
-      <option *ngFor="let p of priorities" [value]="p">{{ p }}</option>
-    </select>
-  </label>
+    <mat-form-field appearance="fill">
+      <mat-label>Responsable</mat-label>
+      <input matInput formControlName="assignee" />
+    </mat-form-field>
 
-  <label>
-    Responsable:
-    <input formControlName="assignee" />
-  </label>
+    <mat-form-field *ngIf="isEdit" appearance="fill">
+      <mat-label>Estado</mat-label>
+      <mat-select formControlName="status">
+        <mat-option *ngFor="let s of statuses" [value]="s">{{ s }}</mat-option>
+      </mat-select>
+    </mat-form-field>
 
-  <label *ngIf="isEdit">
-    Estado:
-    <select formControlName="status">
-      <option *ngFor="let s of statuses" [value]="s">{{ s }}</option>
-    </select>
-  </label>
-
-  <button type="submit">{{ isEdit ? 'Actualizar' : 'Crear' }}</button>
-  <button type="button" [routerLink]="['/tickets']">Cancelar</button>
-
-</form>
+    <div class="actions">
+      <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">
+        {{ isEdit ? 'Actualizar' : 'Crear' }}
+      </button>
+      <button mat-button type="button" [routerLink]="['/tickets']">
+        Cancelar
+      </button>
+    </div>
+  </form>
+</mat-card>

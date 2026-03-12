@@ -1,0 +1,48 @@
+table {
+    width: 100%;
+  }
+  
+  .mat-mdc-header-row {
+    background-color: #1976d2;
+    color: white;
+  }
+  
+  .mat-mdc-row:nth-child(even) {
+    background-color: #f5f5f5;
+  }
+  
+  .mat-mdc-row:hover {
+    background-color: #e3f2fd;
+  }
+  .no-data {
+    text-align: center;
+    padding: 16px;
+    color: #666;
+  }
+  
+  .loading-shade {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.15);
+    z-index: 1;
+  }
+
+  .filters-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin: 16px 0 32px; /* margen inferior más grande */
+  }
+  
+  .filters-container mat-form-field {
+    min-width: 200px;
+    flex: 1 1 200px;
+  }
+  
+  .filters-card,
+.table-card {
+  margin-bottom: 16px;
+}
