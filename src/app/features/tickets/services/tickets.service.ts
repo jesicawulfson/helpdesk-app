@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { Ticket } from '../../../shared/models/ticket.model';
 
 @Injectable({
@@ -23,14 +23,15 @@ export class TicketsService {
     sort: string = 'updatedAt',
     order: string = 'desc'
   ) {
+    const sortValue = order === 'desc' ? `-${sort}` : sort;
   
     let params: any = {
       _page: page,
       _per_page: limit,
-      _sort: sort,
+      _sort: sortValue,
     };
   
-    if (search) params.q = search;
+    if (search) params.title_contains  = search;
     if (status) params.status = status;
     if (priority) params.priority = priority;
     if (category) params.category = category;
@@ -52,5 +53,17 @@ export class TicketsService {
 
   updateTicket(id: number, ticket: Partial<Ticket>): Observable<Ticket> {
     return this.http.put<Ticket>(`${this.apiUrl}/${id}`, ticket);
+  }
+
+  getNextId(): Observable<number> {
+    return this.http.get<Ticket[]>(this.apiUrl).pipe(
+      map(tickets => {
+        const maxId = tickets.reduce((max, t) => {
+          const idNum = Number(t.id);
+          return Number.isFinite(idNum) && idNum > max ? idNum : max;
+        }, 0);
+        return maxId + 1;
+      })
+    );
   }
 }

@@ -47,7 +47,9 @@ export class TicketFormComponent implements OnInit {
       category: ['', Validators.required],
       priority: ['', Validators.required],
       assignee: ['', Validators.required],
-      status: [{ value: 'OPEN', disabled: !this.isEdit }]
+      status: [{ value: 'OPEN', disabled: !this.isEdit }],
+      createdAt: [{value: '', disabled: true}],
+      updatedAt: [{value: '', disabled: true}]
     });
 
     if (this.isEdit && this.ticketId) {
@@ -63,14 +65,24 @@ export class TicketFormComponent implements OnInit {
     const ticketData = this.form.getRawValue();
 
     if (this.isEdit && this.ticketId) {
+      ticketData.updatedAt = new Date().toISOString();
       this.ticketsService.updateTicket(this.ticketId, ticketData).subscribe(() => {
         alert('Ticket actualizado!');
         this.router.navigate(['/tickets']);
       });
     } else {
-      this.ticketsService.createTicket(ticketData).subscribe(() => {
-        alert('Ticket creado!');
-        this.router.navigate(['/tickets']);
+      this.ticketsService.getNextId().subscribe(nextId => {
+        const now = new Date().toISOString();
+        const ticketData = {
+          ...this.form.getRawValue(),
+          id: String(nextId),        
+          createdAt: now,
+          updatedAt: now
+        };
+        this.ticketsService.createTicket(ticketData).subscribe(() => {
+          alert('Ticket creado!');
+          this.router.navigate(['/tickets']);
+        });
       });
     }
   }
@@ -78,4 +90,5 @@ export class TicketFormComponent implements OnInit {
   canDeactivate(): boolean {
     return !this.form.dirty || confirm('Tenés cambios sin guardar. ¿Salir?');
   }
+  
 }

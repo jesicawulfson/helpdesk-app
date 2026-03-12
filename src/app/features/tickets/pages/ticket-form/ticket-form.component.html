@@ -46,6 +46,15 @@
       </mat-select>
     </mat-form-field>
 
+    <mat-form-field appearance="outline" *ngIf="isEdit" disabled>
+      <mat-label>Creado</mat-label>
+      <input matInput [value]="form.get('createdAt')?.value | date:'short'" readonly />
+    </mat-form-field>
+    <mat-form-field appearance="outline" *ngIf="isEdit" disabled>
+      <mat-label>Actualizado</mat-label>
+      <input matInput [value]="form.get('updatedAt')?.value | date:'short'" readonly/>
+    </mat-form-field>
+    
     <div class="actions">
       <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">
         {{ isEdit ? 'Actualizar' : 'Crear' }}

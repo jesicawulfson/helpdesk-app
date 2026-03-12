@@ -1,33 +1,52 @@
-<div *ngIf="ticket; else loading">
-    <h1>Ticket #{{ ticket.id }} - {{ ticket.title }}</h1>
-  
-    <p><strong>Estado:</strong> {{ ticket.status }}</p>
-    <p><strong>Prioridad:</strong> {{ ticket.priority }}</p>
-    <p><strong>Categoría:</strong> {{ ticket.category }}</p>
-    <p><strong>Responsable:</strong> {{ ticket.assignee }}</p>
-    <p><strong>Creado:</strong> {{ ticket.createdAt | date:'short' }}</p>
-    <p><strong>Actualizado:</strong> {{ ticket.updatedAt | date:'short' }}</p>
-  
-    <h2>Descripción</h2>
-    <p>{{ ticket.description }}</p>
-  
-    <h2>Comentarios</h2>
-    <div *ngIf="ticket.comments && ticket.comments.length > 0; else noComments">
-      <ul>
-        <li *ngFor="let comment of ticket.comments">
-          <strong>{{ comment.author }}</strong> ({{ comment.date | date:'short' }}):
-          {{ comment.text }}
-        </li>
-      </ul>
-    </div>
-    <ng-template #noComments>
-      <p>No hay comentarios.</p>
-    </ng-template>
-  
-    <button [routerLink]="['/tickets', ticket.id, 'edit']">Editar Ticket</button>
-    <button [routerLink]="['/tickets']">Volver a la lista</button>
-  </div>
-  
-  <ng-template #loading>
-    <p>Cargando ticket...</p>
-  </ng-template>
+<ng-container *ngIf="ticket; else loading">
+  <mat-card class="ticket-detail-card">
+    <mat-card-header>
+      <mat-card-title>Ticket #{{ ticket.id }} - {{ ticket.title }}</mat-card-title>
+      <mat-card-subtitle>
+        <mat-chip-listbox>
+          <mat-chip>{{ ticket.status }}</mat-chip>
+          <mat-chip color="primary" selected>{{ ticket.priority }}</mat-chip>
+        </mat-chip-listbox>
+      </mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div class="meta-grid">
+        <div><strong>Categoría:</strong> {{ ticket.category }}</div>
+        <div><strong>Responsable:</strong> {{ ticket.assignee }}</div>
+        <div><strong>Creado:</strong> {{ ticket.createdAt | date:'short' }}</div>
+        <div><strong>Actualizado:</strong> {{ ticket.updatedAt | date:'short' }}</div>
+      </div>
+
+      <h3>Descripción</h3>
+      <p class="description">{{ ticket.description }}</p>
+
+      <h3>Comentarios</h3>
+      <ng-container *ngIf="ticket.comments && ticket.comments.length; else noComments">
+        <mat-list>
+          <mat-list-item *ngFor="let comment of ticket.comments">
+            <div matListItemTitle>{{ comment.author }}</div>
+            <div matListItemLine>{{ comment.date | date:'short' }}</div>
+            <div matListItemLine>{{ comment.text }}</div>
+          </mat-list-item>
+        </mat-list>
+      </ng-container>
+      <ng-template #noComments>
+        <p class="no-comments">No hay comentarios.</p>
+      </ng-template>
+    </mat-card-content>
+
+    <mat-card-actions align="end">
+      <button mat-stroked-button color="primary" [routerLink]="['/tickets', ticket.id, 'edit']">
+        Editar Ticket
+      </button>
+      <button mat-button [routerLink]="['/tickets']">
+        Volver a la lista
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</ng-container>
+
+<ng-template #loading>
+  <p>Cargando ticket...</p>
+</ng-template>

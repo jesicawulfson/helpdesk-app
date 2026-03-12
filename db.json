@@ -1,25 +1,59 @@
 {
   "tickets": [
     {
-      "title": "Login no funcionaa",
+      "title": "Login no funciona",
       "description": "Los usuarios no pueden iniciar sesión en el portal",
       "category": "TECH",
       "priority": "HIGH",
-      "assignee": "Juan",
-      "status": "OPEN",
+      "assignee": "Pepe",
+      "status": "IN_PROGRESS",
+      "createdAt": "",
+      "updatedAt": "2026-03-12T18:32:49.626Z",
       "id": "1"
     },
     {
-      "id": "2",
       "title": "Error en facturación",
       "description": "La factura se genera con monto incorrecto",
-      "status": "IN_PROGRESS",
-      "priority": "MEDIUM",
       "category": "BILLING",
+      "priority": "HIGH",
       "assignee": "Ana",
+      "status": "IN_PROGRESS",
       "createdAt": "2026-03-09T15:00:00",
-      "updatedAt": "2026-03-10T09:00:00",
-      "comments": []
+      "updatedAt": "2026-03-12T18:23:59.518Z",
+      "id": "2"
+    },
+    {
+      "title": "Nuevo ticket",
+      "description": "Descripción del problema",
+      "category": "BILLING",
+      "priority": "LOW",
+      "assignee": "Pepee",
+      "status": "OPEN",
+      "createdAt": "2026-03-12T18:33:12.993Z",
+      "updatedAt": "2026-03-12T18:38:44.968Z",
+      "id": "3"
+    },
+    {
+      "id": "4",
+      "title": "Nuevo ticket2",
+      "description": "Nuevo ticket de prueba",
+      "category": "BILLING",
+      "priority": "LOW",
+      "assignee": "Yo",
+      "status": "OPEN",
+      "createdAt": "2026-03-12T18:39:14.334Z",
+      "updatedAt": "2026-03-12T18:39:14.334Z"
+    },
+    {
+      "title": "Nuevvo",
+      "description": "probando la creacion de ticket",
+      "category": "OTHER",
+      "priority": "MEDIUM",
+      "assignee": "Jesica",
+      "status": "OPEN",
+      "createdAt": "2026-03-12T18:44:04.244Z",
+      "updatedAt": "2026-03-12T18:44:18.191Z",
+      "id": "5"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
