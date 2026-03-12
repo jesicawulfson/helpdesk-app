@@ -1,1 +1,33 @@
-<p>ticket-detail works!</p>
+<div *ngIf="ticket; else loading">
+    <h1>Ticket #{{ ticket.id }} - {{ ticket.title }}</h1>
+  
+    <p><strong>Estado:</strong> {{ ticket.status }}</p>
+    <p><strong>Prioridad:</strong> {{ ticket.priority }}</p>
+    <p><strong>Categoría:</strong> {{ ticket.category }}</p>
+    <p><strong>Responsable:</strong> {{ ticket.assignee }}</p>
+    <p><strong>Creado:</strong> {{ ticket.createdAt | date:'short' }}</p>
+    <p><strong>Actualizado:</strong> {{ ticket.updatedAt | date:'short' }}</p>
+  
+    <h2>Descripción</h2>
+    <p>{{ ticket.description }}</p>
+  
+    <h2>Comentarios</h2>
+    <div *ngIf="ticket.comments && ticket.comments.length > 0; else noComments">
+      <ul>
+        <li *ngFor="let comment of ticket.comments">
+          <strong>{{ comment.author }}</strong> ({{ comment.date | date:'short' }}):
+          {{ comment.text }}
+        </li>
+      </ul>
+    </div>
+    <ng-template #noComments>
+      <p>No hay comentarios.</p>
+    </ng-template>
+  
+    <button [routerLink]="['/tickets', ticket.id, 'edit']">Editar Ticket</button>
+    <button [routerLink]="['/tickets']">Volver a la lista</button>
+  </div>
+  
+  <ng-template #loading>
+    <p>Cargando ticket...</p>
+  </ng-template>

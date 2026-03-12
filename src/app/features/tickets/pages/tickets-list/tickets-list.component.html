@@ -1,1 +1,91 @@
-<p>tickets-list works!</p>
+<h1>Tickets</h1>
+
+<button routerLink="/tickets/new">
+  Crear ticket
+</button>
+
+<form [formGroup]="filterForm">
+
+  <input formControlName="search" placeholder="Buscar..." />
+
+  <select formControlName="status">
+    <option value="">Estado</option>
+    <option value="OPEN">Open</option>
+    <option value="IN_PROGRESS">In Progress</option>
+    <option value="DONE">Done</option>
+  </select>
+
+  <select formControlName="priority">
+    <option value="">Prioridad</option>
+    <option value="LOW">Low</option>
+    <option value="MEDIUM">Medium</option>
+    <option value="HIGH">High</option>
+  </select>
+
+</form>
+
+<div *ngIf="loading">
+  Cargando tickets...
+</div>
+
+<table *ngIf="!loading">
+
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Título</th>
+
+      <th (click)="changeSort('priority')" style="cursor:pointer">
+        Prioridad
+      </th>
+
+      <th>Estado</th>
+      <th>Categoría</th>
+      <th>Responsable</th>
+
+      <th (click)="changeSort('updatedAt')" style="cursor:pointer">
+        Actualizado
+      </th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr *ngFor="let ticket of tickets">
+
+      <td>{{ticket.id}}</td>
+
+      <td>
+        <a [routerLink]="['/tickets', ticket.id]"
+           [queryParams]="{ page: page, sort: sort }">
+          {{ticket.title}}
+        </a>
+      </td>
+
+      <td>{{ticket.priority}}</td>
+      <td>{{ticket.status}}</td>
+      <td>{{ticket.category}}</td>
+      <td>{{ticket.assignee}}</td>
+      <td>{{ticket.updatedAt | date:'short'}}</td>
+
+    </tr>
+  </tbody>
+
+</table>
+
+<div *ngIf="total > limit">
+
+  <button
+    [disabled]="page === 1"
+    (click)="changePage(page-1)">
+    Anterior
+  </button>
+
+  Página {{page}}
+
+  <button
+    [disabled]="page >= total/limit"
+    (click)="changePage(page+1)">
+    Siguiente
+  </button>
+
+</div>

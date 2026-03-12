@@ -1,0 +1,26 @@
+{
+  "tickets": [
+    {
+      "title": "Login no funcionaa",
+      "description": "Los usuarios no pueden iniciar sesión en el portal",
+      "category": "TECH",
+      "priority": "HIGH",
+      "assignee": "Juan",
+      "status": "OPEN",
+      "id": "1"
+    },
+    {
+      "id": "2",
+      "title": "Error en facturación",
+      "description": "La factura se genera con monto incorrecto",
+      "status": "IN_PROGRESS",
+      "priority": "MEDIUM",
+      "category": "BILLING",
+      "assignee": "Ana",
+      "createdAt": "2026-03-09T15:00:00",
+      "updatedAt": "2026-03-10T09:00:00",
+      "comments": []
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}
