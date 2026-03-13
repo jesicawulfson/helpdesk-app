@@ -58,6 +58,9 @@ export class TicketsListComponent implements OnInit {
   sort = 'updatedAt';
   order = 'desc';
 
+  error = false;
+  errorMessage = '';
+
   constructor(
     private fb: FormBuilder,
     private ticketsService: TicketsService,
@@ -92,14 +95,48 @@ export class TicketsListComponent implements OnInit {
       this.loadTickets();
     });
 
-    // Escuchar cambios de filtros
+    // Escuchar cambios de filtros con debounce + switchMap
     this.filterForm.valueChanges.pipe(
-      debounceTime(400)
-    ).subscribe(() => {
+      debounceTime(400),
+      switchMap(() => {
+        this.page = 1;           // al cambiar filtros, volvemos a la página 1
+        this.loading = true;
+        this.error = false;
+        this.errorMessage = '';
 
-      this.page = 1;
-      this.updateQueryParams();
+        this.updateQueryParams();
 
+        return this.fetchTickets();   // devuelve el observable del HTTP
+      })
+    ).subscribe({
+      next: (res: any) => {
+        const body = res.body;
+
+        this.tickets = Array.isArray(body)
+          ? body
+          : Array.isArray(body?.data)
+            ? body.data
+            : [];
+
+        const headerTotal = res.headers.get('X-Total-Count');
+        if (body?.items?.total != null) {
+          this.total = +body.items.total;
+        } else if (headerTotal) {
+          this.total = +headerTotal;
+        } else {
+          this.total = this.tickets.length;
+        }
+
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('Error cargando tickets', err);
+        this.loading = false;
+        this.tickets = [];
+        this.total = 0;
+        this.error = true;
+        this.errorMessage = 'Ocurrió un error al cargar los tickets. Intente nuevamente.';
+      }
     });
   }
 
@@ -119,27 +156,35 @@ export class TicketsListComponent implements OnInit {
       this.limit,
       this.sort,
       this.order
-    ).subscribe((res: any) => {
-      const body = res.body;
-
-      this.tickets = Array.isArray(body)
-        ? body
-        : Array.isArray(body?.data)
-          ? body.data
-          : [];
-
-      const headerTotal = res.headers.get('X-Total-Count');
-      
-      if (body?.items?.total != null) {
-        this.total = +body.items.total;
-      } else if (headerTotal) {
-        this.total = +headerTotal;
-      } else {
-        this.total = this.tickets.length;
+    ).subscribe({
+      next: (res: any) => {
+        const body = res.body;
+        this.tickets = Array.isArray(body)
+          ? body
+          : Array.isArray(body?.data)
+            ? body.data
+            : [];
+        const headerTotal = res.headers.get('X-Total-Count');
+        if (body?.items?.total != null) {
+          this.total = +body.items.total;
+        } else if (headerTotal) {
+          this.total = +headerTotal;
+        } else {
+          this.total = this.tickets.length;
+        }
+        this.error = false;
+        this.errorMessage = '';
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('Error cargando tickets', err);
+        this.loading = false;
+        this.tickets = [];
+        this.total = 0;
+        this.error = true;
+        this.errorMessage = 'Ocurrió un error al cargar los tickets. Intente nuevamente.';
       }
-
-      this.loading = false;
-    });
+    });  this.loading = false;
   }
 
 
@@ -167,8 +212,23 @@ export class TicketsListComponent implements OnInit {
   }
 
   onPageChange(event: PageEvent) {
-    this.page = event.pageIndex + 1;   // 0-based → 1-based
-    this.limit = event.pageSize;      // <-- acá aplicás el nuevo pageSize
+    this.page = event.pageIndex + 1;   
+    this.limit = event.pageSize;      
     this.updateQueryParams();
+  }
+
+  private fetchTickets() {
+    const f = this.filterForm.value;
+    return this.ticketsService.getTickets(
+      f.search,
+      f.status,
+      f.priority,
+      f.category,
+      f.assignee,
+      this.page,
+      this.limit,
+      this.sort,
+      this.order
+    );
   }
 }

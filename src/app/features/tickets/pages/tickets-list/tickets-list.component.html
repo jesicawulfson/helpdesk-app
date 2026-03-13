@@ -68,6 +68,18 @@
         <td mat-cell *matCellDef="let ticket"> {{ticket.status}} </td>
       </ng-container>
   
+      <!-- Categoría Column -->
+      <ng-container matColumnDef="category">
+        <th mat-header-cell *matHeaderCellDef>Categoría</th>
+        <td mat-cell *matCellDef="let ticket">{{ ticket.category }}</td>
+      </ng-container>
+
+      <!-- Responsable Column -->
+      <ng-container matColumnDef="assignee">
+        <th mat-header-cell *matHeaderCellDef>Responsable</th>
+        <td mat-cell *matCellDef="let ticket">{{ ticket.assignee }}</td>
+      </ng-container>
+
       <!-- Actualizado Column -->
       <ng-container matColumnDef="updatedAt">
         <th mat-header-cell *matHeaderCellDef (click)="changeSort('updatedAt')" style="cursor:pointer"> 
@@ -76,9 +88,19 @@
         <td mat-cell *matCellDef="let ticket"> {{ticket.updatedAt | date:'short'}} </td>
       </ng-container>
   
+      <!-- Creado Column -->
+      <ng-container matColumnDef="createdAt">
+        <th mat-header-cell *matHeaderCellDef>
+          Creado
+        </th>
+        <td mat-cell *matCellDef="let ticket">
+          {{ ticket.createdAt | date:'short' }}
+        </td>
+      </ng-container>
+
       <!-- Definición de Filas -->
-      <tr mat-header-row *matHeaderRowDef="['id', 'title', 'priority', 'status', 'updatedAt']"></tr>
-      <tr mat-row *matRowDef="let row; columns: ['id', 'title', 'priority', 'status', 'updatedAt'];"></tr>
+      <tr mat-header-row *matHeaderRowDef="['id', 'title', 'priority', 'status', 'category', 'assignee', 'createdAt', 'updatedAt']"></tr>
+      <tr mat-row *matRowDef="let row; columns: ['id', 'title', 'priority', 'status', 'category', 'assignee', 'createdAt', 'updatedAt'];"></tr> 
     </table>
   
     <!-- Estados de carga y vacío -->
@@ -90,6 +112,14 @@
     } @else if (tickets.length === 0) {
       <p class="no-data">No se encontraron tickets.</p>
     }
+    
+    <!-- Mensaje de error con reintento -->
+    <div *ngIf="error" class="error-state">
+      <p>{{ errorMessage }}</p>
+      <button mat-stroked-button color="warn" (click)="loadTickets()">
+        Reintentar
+      </button>
+    </div>
   
     <!-- Paginador -->
     <mat-paginator
