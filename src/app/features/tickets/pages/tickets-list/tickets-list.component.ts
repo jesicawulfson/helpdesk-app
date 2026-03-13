@@ -10,7 +10,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
-import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSortModule } from '@angular/material/sort';
@@ -120,22 +120,28 @@ export class TicketsListComponent implements OnInit {
       this.sort,
       this.order
     ).subscribe((res: any) => {
+      const body = res.body;
 
-      this.tickets = res.body.data;
+      this.tickets = Array.isArray(body)
+        ? body
+        : Array.isArray(body?.data)
+          ? body.data
+          : [];
 
-      const total = res.headers.get('X-Total-Count');
-      this.total = total ? +total : 0;
+      const headerTotal = res.headers.get('X-Total-Count');
+      
+      if (body?.items?.total != null) {
+        this.total = +body.items.total;
+      } else if (headerTotal) {
+        this.total = +headerTotal;
+      } else {
+        this.total = this.tickets.length;
+      }
 
       this.loading = false;
     });
   }
 
-  changePage(page: number) {
-
-    this.page = page;
-    this.updateQueryParams();
-
-  }
 
   changeSort(sort: string) {
 
@@ -153,10 +159,16 @@ export class TicketsListComponent implements OnInit {
       queryParams: {
         ...f,
         page: this.page,
-        sort: this.sort
+        sort: this.sort,
+        limit: this.limit
       }
     });
 
   }
 
+  onPageChange(event: PageEvent) {
+    this.page = event.pageIndex + 1;   // 0-based → 1-based
+    this.limit = event.pageSize;      // <-- acá aplicás el nuevo pageSize
+    this.updateQueryParams();
+  }
 }

@@ -92,22 +92,13 @@
     }
   
     <!-- Paginador -->
-  @if (total > limit) {
-    <p>Hay tickets</p>
-    <mat-paginator 
-    [length]="total" 
-    [pageSize]="limit" 
-    [pageIndex]="page - 1"
-    (page)="changePage($event.pageIndex + 1)">
-  </mat-paginator>
-  } @else {
-    <mat-paginator 
-    [length]="0" 
-    [pageSize]="0" 
-    [pageIndex]="0"
-    (page)="changePage(0)">
-  </mat-paginator>
-  }
+    <mat-paginator
+      [length]="total"
+      [pageSize]="limit"
+      [pageIndex]="page - 1"
+      [pageSizeOptions]="[10, 20, 50]"
+      (page)="onPageChange($event)">
+    </mat-paginator>
   </div>
   
 </mat-card>
