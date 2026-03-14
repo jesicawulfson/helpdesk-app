@@ -413,6 +413,17 @@
       "status": "EN_PROGRESO",
       "createdAt": "2026-03-14T21:20:12.757Z",
       "updatedAt": "2026-03-14T21:20:12.757Z"
+    },
+    {
+      "id": "38",
+      "title": "problema",
+      "description": "Creacion de un ticket de problema",
+      "category": "BILLING",
+      "priority": "MEDIA",
+      "assignee": "Responsable 1",
+      "status": "ABIERTO",
+      "createdAt": "2026-03-14T21:47:55.105Z",
+      "updatedAt": "2026-03-14T21:47:55.105Z"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
