@@ -6,7 +6,7 @@
 
     <mat-card-content>
       <div class="meta-grid">
-        <div><strong>Categoría:</strong> {{ ticket.category }}</div>
+        <div><strong>Categoría:</strong> {{ getCategoryLabel(ticket.category) }}</div>
         <div><strong>Responsable:</strong> {{ ticket.assignee }}</div>
         <div><strong>Creado:</strong> {{ ticket.createdAt | date:'medium' }}</div>
         <div><strong>Actualizado:</strong> {{ ticket.updatedAt | date:'medium' }}</div>

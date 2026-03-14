@@ -1,59 +1,278 @@
-table {
-    width: 100%;
-  }
-  
-  .mat-mdc-header-row {
-    background-color: #1976d2;
-    color: white;
-  }
-  
-  .mat-mdc-row:nth-child(even) {
-    background-color: #f5f5f5;
-  }
-  
-  .mat-mdc-row:hover {
-    background-color: #e3f2fd;
-  }
-  .no-data {
-    text-align: center;
-    padding: 16px;
-    color: #666;
-  }
-  
-  .loading-shade {
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    background: rgba(0, 0, 0, 0.15);
-    z-index: 1;
-  }
+/* ─────────────────────────────────────────────────────────
+   tickets-list.component.css
+   Requiere: ViewEncapsulation.None en el @Component
+   ───────────────────────────────────────────────────────── */
 
-  .filters-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px;
-    margin: 16px 0 32px; /* margen inferior más grande */
-  }
-  
-  .filters-container mat-form-field {
-    min-width: 200px;
-    flex: 1 1 200px;
-  }
-  
-  .filters-card,
-.table-card {
-  margin-bottom: 16px;
+/* ─── Layout general ────────────────────────────────────── */
+h1 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #1a1f3c;
+  margin: 28px 0 20px 0;
+  letter-spacing: -0.3px;
 }
+
+/* ─── Botón crear ───────────────────────────────────────── */
+.app-tickets-list button.mat-mdc-raised-button.mat-primary,
+app-tickets-list button.mat-mdc-raised-button.mat-primary {
+  background: #4f46e5 !important;
+  color: #ffffff !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  height: 40px !important;
+  padding: 0 20px !important;
+  box-shadow: 0 2px 8px rgba(79,70,229,0.25) !important;
+  margin-bottom: 20px;
+  transition: all 0.18s ease !important;
+}
+
+button.mat-mdc-raised-button.mat-primary:hover:not([disabled]) {
+  background: #4338ca !important;
+  box-shadow: 0 4px 16px rgba(79,70,229,0.35) !important;
+  transform: translateY(-1px);
+}
+
+/* ─── Cards ─────────────────────────────────────────────── */
+.filters-card,
+.table-card {
+  border-radius: 12px !important;
+  border: 1px solid #e4e7f0 !important;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06) !important;
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+
+.filters-card .mat-mdc-card-content,
+.table-card .mat-mdc-card-content {
+  padding: 20px 24px !important;
+}
+
+/* ─── Filtros ───────────────────────────────────────────── */
+.filters-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin: 0;
+  padding: 20px 24px;
+}
+
+.filters-container .mat-mdc-form-field {
+  min-width: 180px;
+  flex: 1 1 180px;
+}
+
+/* Outline color */
+.filters-container .mdc-notched-outline__leading,
+.filters-container .mdc-notched-outline__notch,
+.filters-container .mdc-notched-outline__trailing {
+  border-color: #dde1f0 !important;
+}
+
+.filters-container .mat-mdc-form-field:hover .mdc-notched-outline__leading,
+.filters-container .mat-mdc-form-field:hover .mdc-notched-outline__notch,
+.filters-container .mat-mdc-form-field:hover .mdc-notched-outline__trailing {
+  border-color: #4f46e5 !important;
+}
+
+.filters-container .mat-mdc-form-field.mat-focused .mdc-notched-outline__leading,
+.filters-container .mat-mdc-form-field.mat-focused .mdc-notched-outline__notch,
+.filters-container .mat-mdc-form-field.mat-focused .mdc-notched-outline__trailing {
+  border-color: #4f46e5 !important;
+  border-width: 2px !important;
+}
+
+.filters-container .mat-mdc-form-field.mat-focused .mat-mdc-floating-label {
+  color: #4f46e5 !important;
+}
+
+/* ─── Tabla ─────────────────────────────────────────────── */
+.mat-elevation-z8 {
+  box-shadow: none !important;
+  border-radius: 0;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* Header row */
+.mat-mdc-header-row {
+  background: #1a1f3c !important;
+  height: 48px !important;
+}
+
+.mat-mdc-header-cell {
+  color: rgba(255,255,255,0.85) !important;
+  font-size: 0.75rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.8px !important;
+  border-bottom: none !important;
+  padding: 0 16px !important;
+}
+
+.mat-mdc-header-cell[style*="cursor:pointer"],
+.mat-mdc-header-cell[style*="cursor: pointer"] {
+  user-select: none;
+}
+
+.mat-mdc-header-cell[style*="cursor:pointer"]:hover,
+.mat-mdc-header-cell[style*="cursor: pointer"]:hover {
+  color: #ffffff !important;
+  background: rgba(255,255,255,0.08) !important;
+}
+
+/* Data rows */
+.mat-mdc-row {
+  height: 52px !important;
+  transition: background 0.15s ease !important;
+  border-bottom: 1px solid #f0f2f8 !important;
+}
+
+.mat-mdc-row:nth-child(even) {
+  background: #f7f8fc !important;
+}
+
+.mat-mdc-row:hover {
+  background: #eef0fb !important;
+}
+
+.mat-mdc-cell {
+  font-size: 0.88rem !important;
+  color: #374151 !important;
+  padding: 0 16px !important;
+  border-bottom: none !important;
+}
+
+/* Columna ID */
+.mat-mdc-cell:first-child,
+.mat-mdc-header-cell:first-child {
+  padding-left: 20px !important;
+  color: #9ca3af !important;
+  font-size: 0.8rem !important;
+  font-weight: 600 !important;
+  width: 60px;
+}
+
+/* Link de título */
+.mat-mdc-cell a {
+  color: #4f46e5;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.15s ease;
+}
+
+.mat-mdc-cell a:hover {
+  color: #4338ca;
+  text-decoration: underline;
+}
+
+/* ─── Badges de estado y prioridad ──────────────────────── */
+.mat-mdc-cell:nth-child(4) span,
+.mat-mdc-cell:nth-child(3) span {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* ─── No data ───────────────────────────────────────────── */
+.no-data {
+  text-align: center;
+  padding: 48px 20px;
+  color: #9ca3af;
+  font-size: 0.9rem;
+  font-style: italic;
+  background: #f9fafb;
+}
+
+/* ─── Loading ───────────────────────────────────────────── */
+.loading-shade {
+  position: absolute;
+  inset: 0;
+  background: rgba(255,255,255,0.75);
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.loading-shade p {
+  color: #6b7280;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.loading-shade .mat-mdc-progress-spinner circle {
+  stroke: #4f46e5 !important;
+}
+
+/* ─── Error state ───────────────────────────────────────── */
 .error-state {
-  margin: 16px 0;
-  padding: 12px 16px;
-  border: 1px solid #f44336;
-  border-radius: 4px;
-  color: #b71c1c;
+  margin: 16px 20px;
+  padding: 14px 18px;
+  border: 1px solid #fca5a5;
+  border-radius: 8px;
+  background: #fff1f1;
+  color: #991b1b;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
+  font-size: 0.88rem;
+}
+
+.error-state p {
+  margin: 0;
+}
+
+.error-state button.mat-mdc-outlined-button {
+  border-color: #ef4444 !important;
+  color: #ef4444 !important;
+  border-radius: 6px !important;
+  font-size: 0.82rem !important;
+  height: 34px !important;
+  white-space: nowrap;
+}
+
+/* ─── Paginator ─────────────────────────────────────────── */
+.mat-mdc-paginator {
+  background: #f7f8fc !important;
+  border-top: 1px solid #e4e7f0 !important;
+  color: #6b7280 !important;
+  font-size: 0.82rem !important;
+}
+
+.mat-mdc-paginator .mat-mdc-icon-button {
+  color: #4f46e5 !important;
+}
+
+.mat-mdc-paginator .mat-mdc-icon-button[disabled] {
+  color: #d1d5db !important;
+}
+
+.mat-mdc-paginator .mat-mdc-select-value {
+  color: #374151 !important;
+}
+
+/* ─── Responsive ────────────────────────────────────────── */
+@media (max-width: 768px) {
+  h1 { font-size: 1.3rem; margin: 20px 0 16px; }
+
+  .filters-container { padding: 16px; gap: 10px; }
+  .filters-container .mat-mdc-form-field { min-width: 140px; }
+
+  .mat-mdc-header-cell,
+  .mat-mdc-cell { padding: 0 10px !important; font-size: 0.82rem !important; }
+
+  .mat-mdc-row { height: 46px !important; }
+}
+
+@media (max-width: 480px) {
+  .filters-container { flex-direction: column; }
+  .filters-container .mat-mdc-form-field { flex: 1 1 100%; }
 }

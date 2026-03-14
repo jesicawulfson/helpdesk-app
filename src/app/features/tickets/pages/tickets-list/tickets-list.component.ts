@@ -19,6 +19,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCard } from '@angular/material/card';
+import { ViewEncapsulation } from '@angular/core';
 
 @Component({
   selector: 'app-tickets-list',
@@ -42,7 +43,8 @@ import { MatCard } from '@angular/material/card';
     MatCard
   ],
   templateUrl: './tickets-list.component.html',
-  styleUrls: ['./tickets-list.component.scss']
+  styleUrls: ['./tickets-list.component.css'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class TicketsListComponent implements OnInit {
 
@@ -240,5 +242,32 @@ export class TicketsListComponent implements OnInit {
       limit: this.limit,
       order: this.order
     };
+  }
+
+  getStatusLabel(status: string): string {
+    const statusLabels: { [key: string]: string } = {
+      'ABIERTO': 'Abierto',
+      'EN_PROGRESO': 'En Progreso',
+      'COMPLETADO': 'Completado'
+    };
+    return statusLabels[status] || status;
+  }
+
+  getPriorityLabel(priority: string): string {
+    const priorityLabels: { [key: string]: string } = {
+      'BAJA': 'Baja',
+      'MEDIA': 'Media',
+      'ALTA': 'Alta'
+    };
+    return priorityLabels[priority] || priority;
+  }
+
+  getCategoryLabel(category: string): string {
+    const categoryLabels: { [key: string]: string } = {
+      'TECH': 'Técnica',
+      'BILLING': 'Facturación',
+      'OTHER': 'Otra'
+    };
+    return categoryLabels[category] || category;
   }
 }

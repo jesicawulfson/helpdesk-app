@@ -11,6 +11,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {ViewEncapsulation} from '@angular/core';
 
 @Component({
   selector: 'app-ticket-detail',
@@ -28,7 +29,9 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
     MatInputModule,
     MatSelectModule
   ],
-  templateUrl: './ticket-detail.component.html'
+  templateUrl: './ticket-detail.component.html',
+  encapsulation: ViewEncapsulation.None,
+  styleUrls: ['./ticket-detail.component.css'],
 })
 export class TicketDetailComponent implements OnInit {
 
@@ -102,5 +105,14 @@ export class TicketDetailComponent implements OnInit {
 
   trackByComment(index: number, comment: any): any {
     return comment.date + comment.author;
+  }
+
+  getCategoryLabel(category: string): string {
+    const categoryLabels: { [key: string]: string } = {
+      'TECH': 'Técnica',
+      'BILLING': 'Facturación',
+      'OTHER': 'Otra'
+    };
+    return categoryLabels[category] || category;
   }
 }

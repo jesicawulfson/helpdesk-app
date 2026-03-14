@@ -13,13 +13,14 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-
+import { ViewEncapsulation } from '@angular/core';
 @Component({
   selector: 'app-ticket-form',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterModule, MatCardModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatButtonModule, MatIconModule, MatDatepickerModule, MatNativeDateModule, MatSnackBarModule],
   templateUrl: './ticket-form.component.html',
-  styleUrls: ['./ticket-form.component.css']
+  styleUrls: ['./ticket-form.component.css'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class TicketFormComponent implements OnInit {
 
@@ -69,7 +70,9 @@ export class TicketFormComponent implements OnInit {
     if (this.isEdit && this.ticketId) {
       ticketData.updatedAt = new Date().toISOString();
       this.ticketsService.updateTicket(this.ticketId, ticketData).subscribe(() => {
-        alert('Ticket actualizado!');
+        this.snackBar.open('Ticket actualizado correctamente', 'Cerrar', {
+          duration: 3000
+        });
         this.form.markAsPristine();
         this.router.navigate(['/tickets']);
       });
@@ -96,5 +99,31 @@ export class TicketFormComponent implements OnInit {
   canDeactivate(): boolean {
     return !this.form.dirty || confirm('Tiene cambios sin guardar. ¿Salir?');
   }
-  
+
+  getCategoryLabel(category: string): string {
+    const categoryLabels: { [key: string]: string } = {
+      'TECH': 'Técnica',
+      'BILLING': 'Facturación',
+      'OTHER': 'Otra'
+    };
+    return categoryLabels[category] || category;
+  }
+
+  getStatusLabel(status: string): string {
+    const statusLabels: { [key: string]: string } = {
+      'ABIERTO': 'Abierto',
+      'EN_PROGRESO': 'En Progreso',
+      'COMPLETADO': 'Completado'
+    };
+    return statusLabels[status] || status;
+  }
+
+  getPriorityLabel(priority: string): string {
+    const priorityLabels: { [key: string]: string } = {
+      'BAJA': 'Baja',
+      'MEDIA': 'Media',
+      'ALTA': 'Alta'
+    };
+    return priorityLabels[priority] || priority;
+  }
 }

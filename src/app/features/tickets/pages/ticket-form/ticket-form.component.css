@@ -1,11 +1,192 @@
+/* ─────────────────────────────────────────────────────────
+   ticket-form.component.css
+   ViewEncapsulation.None ya está configurado ✓
+   ───────────────────────────────────────────────────────── */
+
+/* ─── Card ──────────────────────────────────────────────── */
+app-ticket-form .mat-mdc-card,
+app-ticket-form mat-card {
+  max-width: 720px;
+  margin: 32px auto;
+  border-radius: 16px !important;
+  border: 1px solid #e4e7f0 !important;
+  box-shadow: 0 4px 32px rgba(0,0,0,0.08) !important;
+  overflow: hidden;
+  padding: 0 !important;
+}
+
+/* ─── Título ────────────────────────────────────────────── */
+app-ticket-form .mat-mdc-card-title,
+app-ticket-form mat-card-title {
+  display: block;
+  background: linear-gradient(135deg, #1a1f3c 0%, #2d3a8c 60%, #4f46e5 100%);
+  color: #ffffff !important;
+  font-size: 1.2rem !important;
+  font-weight: 700 !important;
+  padding: 24px 32px !important;
+  margin: 0 !important;
+  letter-spacing: -0.2px;
+  position: relative;
+}
+
+app-ticket-form .mat-mdc-card-title::after,
+app-ticket-form mat-card-title::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #6366f1, #a78bfa, #38bdf8);
+}
+
+/* ─── Formulario ────────────────────────────────────────── */
 .ticket-form {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 28px 32px 8px 32px;
+}
+
+.ticket-form .mat-mdc-form-field {
+  width: 100%;
+}
+
+/* Grid para campos de dos columnas */
+.ticket-form .field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+/* ─── Outline overrides ─────────────────────────────────── */
+.ticket-form .mdc-notched-outline__leading,
+.ticket-form .mdc-notched-outline__notch,
+.ticket-form .mdc-notched-outline__trailing {
+  border-color: #dde1f0 !important;
+}
+
+.ticket-form .mat-mdc-form-field:hover .mdc-notched-outline__leading,
+.ticket-form .mat-mdc-form-field:hover .mdc-notched-outline__notch,
+.ticket-form .mat-mdc-form-field:hover .mdc-notched-outline__trailing {
+  border-color: #4f46e5 !important;
+}
+
+.ticket-form .mat-mdc-form-field.mat-focused .mdc-notched-outline__leading,
+.ticket-form .mat-mdc-form-field.mat-focused .mdc-notched-outline__notch,
+.ticket-form .mat-mdc-form-field.mat-focused .mdc-notched-outline__trailing {
+  border-color: #4f46e5 !important;
+  border-width: 2px !important;
+}
+
+.ticket-form .mat-mdc-form-field.mat-focused .mat-mdc-floating-label {
+  color: #4f46e5 !important;
+}
+
+/* Fill → convertir visualmente a outlined limpio */
+.ticket-form .mat-mdc-text-field-wrapper.mdc-text-field--filled {
+  background: #f7f8fc !important;
+  border-radius: 8px !important;
+  border: 1px solid #dde1f0;
+  transition: border-color 0.18s ease, background 0.18s ease;
+}
+
+.ticket-form .mat-mdc-text-field-wrapper.mdc-text-field--filled:hover {
+  background: #f0f2fa !important;
+  border-color: #4f46e5;
+}
+
+.ticket-form .mat-mdc-text-field-wrapper.mdc-text-field--filled.mdc-text-field--focused {
+  background: #ffffff !important;
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 3px rgba(79,70,229,0.10);
+}
+
+/* Quitar línea inferior del fill */
+.ticket-form .mdc-text-field--filled .mdc-line-ripple {
+  display: none !important;
+}
+
+/* Campos readonly/disabled */
+.ticket-form .mat-mdc-form-field.mat-form-field-disabled .mat-mdc-text-field-wrapper {
+  background: #f0f2f8 !important;
+  opacity: 0.75;
+}
+
+.ticket-form .mat-mdc-form-field.mat-form-field-disabled .mat-mdc-floating-label {
+  color: #9ca3af !important;
+}
+
+/* ─── Acciones ──────────────────────────────────────────── */
+.actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 20px 32px 28px 32px;
+  border-top: 1px solid #e4e7f0;
+  background: #f7f8fc;
+  margin-top: 12px;
+}
+
+/* Botón primario */
+.actions button.mat-mdc-raised-button.mat-primary {
+  background: #4f46e5 !important;
+  color: #ffffff !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  height: 42px !important;
+  padding: 0 24px !important;
+  font-size: 0.9rem !important;
+  box-shadow: 0 2px 8px rgba(79,70,229,0.25) !important;
+  transition: all 0.18s ease !important;
+}
+
+.actions button.mat-mdc-raised-button.mat-primary:hover:not([disabled]) {
+  background: #4338ca !important;
+  box-shadow: 0 4px 16px rgba(79,70,229,0.35) !important;
+  transform: translateY(-1px);
+}
+
+.actions button.mat-mdc-raised-button[disabled] {
+  background: #c7d2fe !important;
+  color: #818cf8 !important;
+  box-shadow: none !important;
+}
+
+/* Botón cancelar */
+.actions button.mat-mdc-button {
+  color: #6b7280 !important;
+  border-radius: 8px !important;
+  font-weight: 500 !important;
+  height: 42px !important;
+  padding: 0 16px !important;
+  transition: all 0.18s ease !important;
+}
+
+.actions button.mat-mdc-button:hover {
+  background: rgba(0,0,0,0.04) !important;
+  color: #374151 !important;
+}
+
+/* ─── Errores ───────────────────────────────────────────── */
+.ticket-form .mat-mdc-form-field-error {
+  font-size: 0.78rem !important;
+  color: #dc2626 !important;
+}
+
+/* ─── Responsive ────────────────────────────────────────── */
+@media (max-width: 600px) {
+  app-ticket-form .mat-mdc-card,
+  app-ticket-form mat-card {
+    margin: 12px;
+    border-radius: 12px !important;
   }
-  
-  .actions {
-    display: flex;
-    gap: 8px;
-    margin-top: 16px;
+
+  app-ticket-form .mat-mdc-card-title,
+  app-ticket-form mat-card-title {
+    padding: 20px !important;
+    font-size: 1.05rem !important;
   }
+
+  .ticket-form         { padding: 20px 20px 8px; }
+  .ticket-form .field-row { grid-template-columns: 1fr; }
+  .actions             { padding: 16px 20px 24px; flex-direction: column; align-items: stretch; }
+}
