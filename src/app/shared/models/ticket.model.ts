@@ -1,6 +1,6 @@
-export type TicketStatus = 'OPEN' | 'IN_PROGRESS' | 'DONE';
+export type TicketStatus = 'ABIERTO' | 'EN_PROGRESO' | 'COMPLETADO';
 
-export type TicketPriority = 'LOW' | 'MEDIUM' | 'HIGH';
+export type TicketPriority = 'BAJA' | 'MEDIA' | 'ALTA';
 
 export type TicketCategory = 'BILLING' | 'TECH' | 'OTHER';
 

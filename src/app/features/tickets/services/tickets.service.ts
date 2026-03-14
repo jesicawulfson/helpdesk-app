@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { map, Observable } from 'rxjs';
+import { map, Observable, switchMap } from 'rxjs';
 import { Ticket } from '../../../shared/models/ticket.model';
 
 @Injectable({
@@ -64,6 +64,16 @@ export class TicketsService {
         }, 0);
         return maxId + 1;
       })
+    );
+  }
+
+  addComment(ticketId: number, comment: { author: string; text: string }): Observable<Ticket> {
+    return this.getTicket(ticketId).pipe(
+      map(ticket => ({
+        ...ticket,
+        comments: [...(ticket.comments || []), { ...comment, date: new Date().toISOString() }]
+      })),
+      switchMap(updatedTicket => this.updateTicket(ticketId, updatedTicket))
     );
   }
 }

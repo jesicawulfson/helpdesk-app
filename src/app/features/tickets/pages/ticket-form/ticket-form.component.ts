@@ -12,11 +12,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-ticket-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, MatCardModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatButtonModule, MatIconModule, MatDatepickerModule, MatNativeDateModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, MatCardModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatButtonModule, MatIconModule, MatDatepickerModule, MatNativeDateModule, MatSnackBarModule],
   templateUrl: './ticket-form.component.html',
   styleUrls: ['./ticket-form.component.css']
 })
@@ -27,14 +28,15 @@ export class TicketFormComponent implements OnInit {
   ticketId?: number;
 
   categories: TicketCategory[] = ['BILLING', 'TECH', 'OTHER'];
-  priorities: TicketPriority[] = ['LOW', 'MEDIUM', 'HIGH'];
-  statuses: TicketStatus[] = ['OPEN', 'IN_PROGRESS', 'DONE'];
+  priorities: TicketPriority[] = ['BAJA', 'MEDIA', 'ALTA'];
+  statuses: TicketStatus[] = ['ABIERTO', 'EN_PROGRESO', 'COMPLETADO'];
 
   constructor(
     private fb: FormBuilder,
     private ticketsService: TicketsService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -47,7 +49,7 @@ export class TicketFormComponent implements OnInit {
       category: ['', Validators.required],
       priority: ['', Validators.required],
       assignee: ['', Validators.required],
-      status: [{ value: 'OPEN', disabled: !this.isEdit }],
+      status: [{ value: 'ABIERTO', disabled: !this.isEdit }],
       createdAt: [{value: '', disabled: true}],
       updatedAt: [{value: '', disabled: true}]
     });
@@ -68,6 +70,7 @@ export class TicketFormComponent implements OnInit {
       ticketData.updatedAt = new Date().toISOString();
       this.ticketsService.updateTicket(this.ticketId, ticketData).subscribe(() => {
         alert('Ticket actualizado!');
+        this.form.markAsPristine();
         this.router.navigate(['/tickets']);
       });
     } else {
@@ -80,7 +83,10 @@ export class TicketFormComponent implements OnInit {
           updatedAt: now
         };
         this.ticketsService.createTicket(ticketData).subscribe(() => {
-          alert('Ticket creado!');
+          this.snackBar.open('Ticket creado correctamente', 'Cerrar', {
+            duration: 3000
+          });
+          this.form.markAsPristine();
           this.router.navigate(['/tickets']);
         });
       });
@@ -88,7 +94,7 @@ export class TicketFormComponent implements OnInit {
   }
 
   canDeactivate(): boolean {
-    return !this.form.dirty || confirm('Tenés cambios sin guardar. ¿Salir?');
+    return !this.form.dirty || confirm('Tiene cambios sin guardar. ¿Salir?');
   }
   
 }

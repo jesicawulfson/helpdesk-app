@@ -119,13 +119,10 @@ export class TicketsListComponent implements OnInit {
             : [];
 
         const headerTotal = res.headers.get('X-Total-Count');
-        if (body?.items?.total != null) {
-          this.total = +body.items.total;
-        } else if (headerTotal) {
-          this.total = +headerTotal;
-        } else {
-          this.total = this.tickets.length;
-        }
+
+        this.total = headerTotal
+          ? +headerTotal
+          : this.tickets.length;
 
         this.loading = false;
       },
@@ -138,6 +135,13 @@ export class TicketsListComponent implements OnInit {
         this.errorMessage = 'Ocurrió un error al cargar los tickets. Intente nuevamente.';
       }
     });
+  }
+  get startItem(): number {
+    return (this.page - 1) * this.limit + 1;
+  }
+  
+  get endItem(): number {
+    return Math.min(this.page * this.limit, this.total);
   }
 
   loadTickets() {
@@ -165,13 +169,7 @@ export class TicketsListComponent implements OnInit {
             ? body.data
             : [];
         const headerTotal = res.headers.get('X-Total-Count');
-        if (body?.items?.total != null) {
-          this.total = +body.items.total;
-        } else if (headerTotal) {
-          this.total = +headerTotal;
-        } else {
-          this.total = this.tickets.length;
-        }
+        this.total = headerTotal ? +headerTotal : this.tickets.length;
         this.error = false;
         this.errorMessage = '';
         this.loading = false;
@@ -184,7 +182,7 @@ export class TicketsListComponent implements OnInit {
         this.error = true;
         this.errorMessage = 'Ocurrió un error al cargar los tickets. Intente nuevamente.';
       }
-    });  this.loading = false;
+    });  
   }
 
 
@@ -215,6 +213,7 @@ export class TicketsListComponent implements OnInit {
     this.page = event.pageIndex + 1;   
     this.limit = event.pageSize;      
     this.updateQueryParams();
+    this.loadTickets();
   }
 
   private fetchTickets() {
@@ -230,5 +229,16 @@ export class TicketsListComponent implements OnInit {
       this.sort,
       this.order
     );
+  }
+
+  get currentQueryParams() {
+    const f = this.filterForm.value;
+    return {
+      ...f,
+      page: this.page,
+      sort: this.sort,
+      limit: this.limit,
+      order: this.order
+    };
   }
 }

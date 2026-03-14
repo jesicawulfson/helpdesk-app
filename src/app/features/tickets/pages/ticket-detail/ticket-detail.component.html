@@ -2,45 +2,100 @@
   <mat-card class="ticket-detail-card">
     <mat-card-header>
       <mat-card-title>Ticket #{{ ticket.id }} - {{ ticket.title }}</mat-card-title>
-      <mat-card-subtitle>
-        <mat-chip-listbox>
-          <mat-chip>{{ ticket.status }}</mat-chip>
-          <mat-chip color="primary" selected>{{ ticket.priority }}</mat-chip>
-        </mat-chip-listbox>
-      </mat-card-subtitle>
     </mat-card-header>
 
     <mat-card-content>
       <div class="meta-grid">
         <div><strong>Categoría:</strong> {{ ticket.category }}</div>
         <div><strong>Responsable:</strong> {{ ticket.assignee }}</div>
-        <div><strong>Creado:</strong> {{ ticket.createdAt | date:'short' }}</div>
-        <div><strong>Actualizado:</strong> {{ ticket.updatedAt | date:'short' }}</div>
+        <div><strong>Creado:</strong> {{ ticket.createdAt | date:'medium' }}</div>
+        <div><strong>Actualizado:</strong> {{ ticket.updatedAt | date:'medium' }}</div>
       </div>
 
       <h3>Descripción</h3>
       <p class="description">{{ ticket.description }}</p>
 
+      <h3>Estado y Prioridad</h3>
+      <form [formGroup]="statusForm" class="status-form">
+        <mat-form-field appearance="outline">
+          <mat-label>Estado</mat-label>
+          <mat-select formControlName="status">
+            <mat-option value="ABIERTO">Abierto</mat-option>
+            <mat-option value="EN_PROGRESO">En Progreso</mat-option>
+            <mat-option value="COMPLETADO">Completado</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Prioridad</mat-label>
+          <mat-select formControlName="priority">
+            <mat-option value="BAJA">Baja</mat-option>
+            <mat-option value="MEDIA">Media</mat-option>
+            <mat-option value="ALTA">Alta</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" (click)="saveStatusAndPriority()" [disabled]="statusForm.invalid">
+          <mat-icon>save</mat-icon>
+          Guardar Cambios
+        </button>
+      </form>
+
       <h3>Comentarios</h3>
       <ng-container *ngIf="ticket.comments && ticket.comments.length; else noComments">
-        <mat-list>
-          <mat-list-item *ngFor="let comment of ticket.comments">
-            <div matListItemTitle>{{ comment.author }}</div>
-            <div matListItemLine>{{ comment.date | date:'short' }}</div>
-            <div matListItemLine>{{ comment.text }}</div>
-          </mat-list-item>
-        </mat-list>
+        <div class="timeline">
+          <div class="timeline-item" *ngFor="let comment of ticket.comments; trackBy: trackByComment">
+            <div class="timeline-marker"></div>
+            <div class="timeline-content">
+              <div class="comment-header">
+                <strong>{{ comment.author }}</strong>
+                <span class="comment-date">{{ comment.date | date:'short' }}</span>
+              </div>
+              <p class="comment-text">{{ comment.text }}</p>
+            </div>
+          </div>
+        </div>
       </ng-container>
       <ng-template #noComments>
-        <p class="no-comments">No hay comentarios.</p>
+        <p class="no-comments">
+          <mat-icon>chat_bubble_outline</mat-icon>
+          <br>
+          No hay comentarios aún
+        </p>
       </ng-template>
+
+      <h3>Agregar Comentario</h3>
+      <form [formGroup]="commentForm" class="comment-form">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Tu Nombre</mat-label>
+          <input matInput formControlName="author" placeholder="Ingresa tu nombre">
+          <mat-icon matPrefix>person</mat-icon>
+          <mat-error *ngIf="commentForm.get('author')?.invalid && commentForm.get('author')?.touched">
+            El nombre es requerido
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Comentario</mat-label>
+          <textarea matInput formControlName="text" placeholder="Escribe tu comentario aquí..." rows="4"></textarea>
+          <mat-icon matPrefix>comment</mat-icon>
+          <mat-error *ngIf="commentForm.get('text')?.invalid && commentForm.get('text')?.touched">
+            El comentario es requerido (mínimo 5 caracteres)
+          </mat-error>
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" (click)="addComment()" [disabled]="commentForm.invalid">
+          <mat-icon>add_comment</mat-icon>
+          Agregar Comentario
+        </button>
+      </form>
     </mat-card-content>
 
     <mat-card-actions align="end">
       <button mat-stroked-button color="primary" [routerLink]="['/tickets', ticket.id, 'edit']">
         Editar Ticket
       </button>
-      <button mat-button [routerLink]="['/tickets']">
+      <button mat-button (click)="goBackToList()">
         Volver a la lista
       </button>
     </mat-card-actions>
