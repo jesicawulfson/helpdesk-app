@@ -18,6 +18,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Subject } from 'rxjs';
 import { catchError, finalize, takeUntil } from 'rxjs/operators';
 import { of } from 'rxjs';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-ticket-detail',
@@ -29,7 +30,7 @@ import { of } from 'rxjs';
   imports: [
     CommonModule, RouterModule, DatePipe,
     MatCardModule, MatListModule, MatButtonModule, MatIconModule,
-    ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatSelectModule
+    ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatProgressSpinnerModule
   ],
 })
 export class TicketDetailComponent implements OnInit, OnDestroy {

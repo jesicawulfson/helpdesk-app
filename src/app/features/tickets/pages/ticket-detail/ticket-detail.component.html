@@ -1,25 +1,30 @@
 <ng-container *ngIf="ticket; else loading">
   <mat-card class="ticket-detail-card">
+
     <mat-card-header>
       <mat-card-title>Ticket #{{ ticket.id }} - {{ ticket.title }}</mat-card-title>
     </mat-card-header>
 
     <mat-card-content>
+
+      <!-- Meta -->
       <div class="meta-grid">
-        <div><strong>Categoría:</strong> {{ getCategoryLabel(ticket.category) }}</div>
-        <div><strong>Responsable:</strong> {{ ticket.assignee }}</div>
-        <div><strong>Creado:</strong> {{ ticket.createdAt | date:'medium' }}</div>
-        <div><strong>Actualizado:</strong> {{ ticket.updatedAt | date:'medium' }}</div>
+        <div><strong>Categoría</strong> {{ getCategoryLabel(ticket.category) }}</div>
+        <div><strong>Responsable</strong> {{ ticket.assignee }}</div>
+        <div><strong>Creado</strong> {{ ticket.createdAt | date:'medium' }}</div>
+        <div><strong>Actualizado</strong> {{ ticket.updatedAt | date:'medium' }}</div>
       </div>
 
+      <!-- Descripción -->
       <h3>Descripción</h3>
       <p class="description">{{ ticket.description }}</p>
 
+      <!-- Estado y Prioridad -->
       <h3>Estado y Prioridad</h3>
       <form [formGroup]="statusForm" class="status-form">
         <mat-form-field appearance="outline">
           <mat-label>Estado</mat-label>
-          <mat-select formControlName="status">
+          <mat-select formControlName="status" aria-label="Estado del ticket">
             <mat-option value="ABIERTO">Abierto</mat-option>
             <mat-option value="EN_PROGRESO">En Progreso</mat-option>
             <mat-option value="COMPLETADO">Completado</mat-option>
@@ -28,48 +33,63 @@
 
         <mat-form-field appearance="outline">
           <mat-label>Prioridad</mat-label>
-          <mat-select formControlName="priority">
+          <mat-select formControlName="priority" aria-label="Prioridad del ticket">
             <mat-option value="BAJA">Baja</mat-option>
             <mat-option value="MEDIA">Media</mat-option>
             <mat-option value="ALTA">Alta</mat-option>
           </mat-select>
         </mat-form-field>
 
-        <button mat-raised-button color="primary" (click)="saveStatusAndPriority()" [disabled]="statusForm.invalid">
+        <button
+          mat-raised-button
+          color="primary"
+          type="button"
+          aria-label="Guardar cambios de estado y prioridad"
+          [disabled]="statusForm.invalid || saving"
+          (click)="saveStatusAndPriority()">
           <mat-icon>save</mat-icon>
           Guardar Cambios
         </button>
       </form>
 
+      <!-- Comentarios -->
       <h3>Comentarios</h3>
-      <ng-container *ngIf="ticket.comments && ticket.comments.length; else noComments">
-        <div class="timeline">
-          <div class="timeline-item" *ngFor="let comment of ticket.comments; trackBy: trackByComment">
-            <div class="timeline-marker"></div>
-            <div class="timeline-content">
-              <div class="comment-header">
-                <strong>{{ comment.author }}</strong>
-                <span class="comment-date">{{ comment.date | date:'short' }}</span>
+
+      @if (ticket.comments && ticket.comments.length) {
+        <div class="timeline" role="list" aria-label="Lista de comentarios">
+          @for (comment of ticket.comments; track trackByComment($index, comment)) {
+            <div class="timeline-item" role="listitem">
+              <div class="timeline-marker" aria-hidden="true"></div>
+              <div class="timeline-content">
+                <div class="comment-header">
+                  <strong>{{ comment.author }}</strong>
+                  <span class="comment-date">{{ comment.date | date:'short' }}</span>
+                </div>
+                <p class="comment-text">{{ comment.text }}</p>
               </div>
-              <p class="comment-text">{{ comment.text }}</p>
             </div>
-          </div>
+          }
         </div>
-      </ng-container>
-      <ng-template #noComments>
-        <p class="no-comments">
-          <mat-icon>chat_bubble_outline</mat-icon>
+      } @else {
+        <p class="no-comments" role="status">
+          <mat-icon aria-hidden="true">chat_bubble_outline</mat-icon>
           <br>
           No hay comentarios aún
         </p>
-      </ng-template>
+      }
 
+      <!-- Agregar comentario -->
       <h3>Agregar Comentario</h3>
       <form [formGroup]="commentForm" class="comment-form">
+
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Tu Nombre</mat-label>
-          <input matInput formControlName="author" placeholder="Ingresa tu nombre">
-          <mat-icon matPrefix>person</mat-icon>
+          <input
+            matInput
+            formControlName="author"
+            placeholder="Ingresa tu nombre"
+            aria-required="true">
+          <mat-icon matPrefix aria-hidden="true">person</mat-icon>
           <mat-error *ngIf="commentForm.get('author')?.invalid && commentForm.get('author')?.touched">
             El nombre es requerido
           </mat-error>
@@ -77,31 +97,55 @@
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Comentario</mat-label>
-          <textarea matInput formControlName="text" placeholder="Escribe tu comentario aquí..." rows="4"></textarea>
-          <mat-icon matPrefix>comment</mat-icon>
+          <textarea
+            matInput
+            formControlName="text"
+            placeholder="Escribe tu comentario aquí..."
+            rows="4"
+            aria-required="true">
+          </textarea>
+          <mat-icon matPrefix aria-hidden="true">comment</mat-icon>
           <mat-error *ngIf="commentForm.get('text')?.invalid && commentForm.get('text')?.touched">
             El comentario es requerido (mínimo 5 caracteres)
           </mat-error>
         </mat-form-field>
 
-        <button mat-raised-button color="primary" (click)="addComment()" [disabled]="commentForm.invalid">
-          <mat-icon>add_comment</mat-icon>
+        <button
+          mat-raised-button
+          color="primary"
+          type="button"
+          aria-label="Agregar comentario al ticket"
+          [disabled]="commentForm.invalid"
+          (click)="addComment()">
+          <mat-icon aria-hidden="true">add_comment</mat-icon>
           Agregar Comentario
         </button>
+
       </form>
     </mat-card-content>
 
     <mat-card-actions align="end">
-      <button mat-stroked-button color="primary" [routerLink]="['/tickets', ticket.id, 'edit']">
+      <button
+        mat-stroked-button
+        color="primary"
+        aria-label="Editar ticket"
+        [routerLink]="['/tickets', ticket.id, 'edit']">
         Editar Ticket
       </button>
-      <button mat-button (click)="goBackToList()">
+      <button
+        mat-button
+        aria-label="Volver a la lista de tickets"
+        (click)="goBackToList()">
         Volver a la lista
       </button>
     </mat-card-actions>
+
   </mat-card>
 </ng-container>
 
+<!-- Loading state -->
 <ng-template #loading>
-  <p>Cargando ticket...</p>
+  <div class="loading-shade" style="position: relative; min-height: 300px; display: flex; align-items: center; justify-content: center;">
+    <mat-spinner diameter="48" aria-label="Cargando ticket..."></mat-spinner>
+  </div>
 </ng-template>

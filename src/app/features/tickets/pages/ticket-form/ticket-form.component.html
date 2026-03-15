@@ -3,31 +3,48 @@
     {{ isEdit ? 'Editar Ticket' : 'Crear Ticket' }}
   </mat-card-title>
 
-  <form [formGroup]="form" (ngSubmit)="save()" class="ticket-form">
+  <form
+    [formGroup]="form"
+    (ngSubmit)="save()"
+    class="ticket-form"
+    [attr.aria-label]="isEdit ? 'Formulario de edición de ticket' : 'Formulario de creación de ticket'">
 
+    <!-- Título -->
     <mat-form-field appearance="outline">
       <mat-label>Título</mat-label>
-      <input matInput formControlName="title" placeholder="Ej. Error al iniciar sesión" />
+      <input
+        matInput
+        formControlName="title"
+        placeholder="Ej. Error al iniciar sesión"
+        aria-required="true" />
       <mat-error *ngIf="form.get('title')?.invalid && form.get('title')?.touched">
         El título es obligatorio (mínimo 5 caracteres)
       </mat-error>
     </mat-form-field>
 
+    <!-- Descripción -->
     <mat-form-field appearance="outline">
       <mat-label>Descripción</mat-label>
-      <textarea matInput rows="4" formControlName="description"
-        placeholder="Describe el problema con detalle..."></textarea>
+      <textarea
+        matInput
+        rows="4"
+        formControlName="description"
+        placeholder="Describe el problema con detalle..."
+        aria-required="true">
+      </textarea>
       <mat-error *ngIf="form.get('description')?.invalid && form.get('description')?.touched">
         La descripción es obligatoria (mínimo 20 caracteres)
       </mat-error>
     </mat-form-field>
 
-    <!-- Categoría + Prioridad en la misma fila -->
+    <!-- Categoría + Prioridad -->
     <div class="field-row">
       <mat-form-field appearance="outline">
         <mat-label>Categoría</mat-label>
-        <mat-select formControlName="category">
-          <mat-option *ngFor="let c of categories" [value]="c">{{ getCategoryLabel(c) }}</mat-option>
+        <mat-select formControlName="category" aria-required="true" aria-label="Categoría del ticket">
+          @for (c of categories; track c) {
+            <mat-option [value]="c">{{ getCategoryLabel(c) }}</mat-option>
+          }
         </mat-select>
         <mat-error *ngIf="form.get('category')?.invalid && form.get('category')?.touched">
           Selecciona una categoría
@@ -36,8 +53,10 @@
 
       <mat-form-field appearance="outline">
         <mat-label>Prioridad</mat-label>
-        <mat-select formControlName="priority">
-          <mat-option *ngFor="let p of priorities" [value]="p">{{ getPriorityLabel(p) }}</mat-option>
+        <mat-select formControlName="priority" aria-required="true" aria-label="Prioridad del ticket">
+          @for (p of priorities; track p) {
+            <mat-option [value]="p">{{ getPriorityLabel(p) }}</mat-option>
+          }
         </mat-select>
         <mat-error *ngIf="form.get('priority')?.invalid && form.get('priority')?.touched">
           Selecciona una prioridad
@@ -45,46 +64,76 @@
       </mat-form-field>
     </div>
 
-    <!-- Responsable + Estado (solo en edit) en la misma fila -->
+    <!-- Responsable + Estado -->
     <div class="field-row">
       <mat-form-field appearance="outline">
         <mat-label>Responsable</mat-label>
-        <input matInput formControlName="assignee" placeholder="Nombre del responsable" />
+        <input
+          matInput
+          formControlName="assignee"
+          placeholder="Nombre del responsable"
+          aria-required="true" />
         <mat-error *ngIf="form.get('assignee')?.invalid && form.get('assignee')?.touched">
           El responsable es obligatorio
         </mat-error>
       </mat-form-field>
 
-      <mat-form-field *ngIf="isEdit" appearance="outline">
-        <mat-label>Estado</mat-label>
-        <mat-select formControlName="status">
-          <mat-option *ngFor="let s of statuses" [value]="s">{{ getStatusLabel(s) }}</mat-option>
-        </mat-select>
-      </mat-form-field>
+      @if (isEdit) {
+        <mat-form-field appearance="outline">
+          <mat-label>Estado</mat-label>
+          <mat-select formControlName="status" aria-label="Estado del ticket">
+            @for (s of statuses; track s) {
+              <mat-option [value]="s">{{ getStatusLabel(s) }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      }
     </div>
 
-    <!-- Fechas solo en edición -->
-    <div class="field-row" *ngIf="isEdit">
-      <mat-form-field appearance="outline">
-        <mat-label>Creado</mat-label>
-        <input matInput [value]="form.get('createdAt')?.value | date:'short'" readonly />
-      </mat-form-field>
+    <!-- Fechas (solo edición) -->
+    @if (isEdit) {
+      <div class="field-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Creado</mat-label>
+          <input
+            matInput
+            [value]="form.get('createdAt')?.value | date:'short'"
+            readonly
+            aria-readonly="true"
+            aria-label="Fecha de creación del ticket" />
+        </mat-form-field>
 
-      <mat-form-field appearance="outline">
-        <mat-label>Actualizado</mat-label>
-        <input matInput [value]="form.get('updatedAt')?.value | date:'short'" readonly />
-      </mat-form-field>
-    </div>
+        <mat-form-field appearance="outline">
+          <mat-label>Actualizado</mat-label>
+          <input
+            matInput
+            [value]="form.get('updatedAt')?.value | date:'short'"
+            readonly
+            aria-readonly="true"
+            aria-label="Fecha de última actualización del ticket" />
+        </mat-form-field>
+      </div>
+    }
 
   </form>
 
   <div class="actions">
-    <button mat-raised-button color="primary" type="submit"
-      [disabled]="form.invalid" (click)="save()">
+    <button
+      mat-raised-button
+      color="primary"
+      type="button"
+      [disabled]="form.invalid || saving"
+      [attr.aria-label]="isEdit ? 'Actualizar ticket' : 'Crear ticket'"
+      (click)="save()">
       {{ isEdit ? 'Actualizar Ticket' : 'Crear Ticket' }}
     </button>
-    <button mat-button type="button" [routerLink]="['/tickets']">
+    <button
+      mat-button
+      type="button"
+      aria-label="Cancelar y volver a la lista"
+      [routerLink]="['/tickets']">
       Cancelar
     </button>
   </div>
+
 </mat-card>
