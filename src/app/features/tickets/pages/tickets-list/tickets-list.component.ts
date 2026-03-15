@@ -119,10 +119,10 @@ export class TicketsListComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$)
     ).subscribe(res => {
       if (!res) return;
-      const body = (res as any).body;
-      this.tickets = Array.isArray(body) ? body : Array.isArray(body?.data) ? body.data : [];
-      const headerTotal = (res as any).headers?.get('X-Total-Count');
-      this.total = headerTotal ? +headerTotal : this.tickets.length;
+      const body = res.body;
+      this.tickets = Array.isArray(body?.data) ? body.data : Array.isArray(body) ? body : [];
+      this.total = body?.items
+        ?? (body?.pages ? body.pages * this.limit : this.tickets.length);
       this.cdr.markForCheck();
     });
   }
@@ -157,10 +157,10 @@ export class TicketsListComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$)
     ).subscribe(res => {
       if (!res) return;
-      const body = (res as any).body;
-      this.tickets = Array.isArray(body) ? body : Array.isArray(body?.data) ? body.data : [];
-      const headerTotal = (res as any).headers?.get('X-Total-Count');
-      this.total = headerTotal ? +headerTotal : this.tickets.length;
+      const body = res.body;
+      this.tickets = Array.isArray(body?.data) ? body.data : Array.isArray(body) ? body : [];
+      this.total = body?.items
+        ?? (body?.pages ? body.pages * this.limit : this.tickets.length);
       this.cdr.markForCheck();
     });
   }

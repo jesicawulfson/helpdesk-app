@@ -24,23 +24,20 @@ export class TicketsService {
     order: string = 'desc'
   ) {
     const sortValue = order === 'desc' ? `-${sort}` : sort;
-  
+
     let params: any = {
       _page: page,
       _per_page: limit,
       _sort: sortValue,
     };
-  
-    if (search) params.title_contains  = search;
-    if (status) params.status = status;
-    if (priority) params.priority = priority;
-    if (category) params.category = category;
-    if (assignee) params.assignee = assignee;
-  
-    return this.http.get<Ticket[]>(this.apiUrl, {
-      params,
-      observe: 'response'
-    });
+
+    if (search)    params.title_like = search;
+    if (status)    params.status     = status;
+    if (priority)  params.priority   = priority;
+    if (category)  params.category   = category;
+    if (assignee)  params.assignee   = assignee;
+
+    return this.http.get<any>(this.apiUrl, { params, observe: 'response' });
   }
 
   getTicket(id: number): Observable<Ticket> {
